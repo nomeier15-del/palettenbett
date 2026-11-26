@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Palettenbett Bauplan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday, a practical workshop plan
+   IDEA a carpenter's construction sheet on spruce: drawing, cut list, shopping list
+   PICTURE large rotatable 3D model of the bed, rebuilt live for the chosen width
+   COLOUR white ground, spruce field #f2e2c2 behind the model, graphite ink, carpenter-pencil red accent
+   TYPE Archivo 700 display + Inter text
+   LAYOUT title + size picker + key figures across the top, full-width model band, then table, lists, steps */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#161412);--ink:light-dark(#1d1b18,#efe9df);--mut:light-dark(#5e5850,#b4ab9d);--wood:light-dark(#f2e2c2,#2a231a);--line:light-dark(#e3dccf,#38322a);--acc:light-dark(#d62f22,#ff6a5a);--accbg:light-dark(#fde9e6,#3a1d19);--card:light-dark(#faf7f1,#1f1c18)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2{font-family:Archivo,Inter,sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.05;margin:0}
+h1{font-size:clamp(32px,5vw,48px);text-wrap:balance}
+h2{font-size:clamp(24px,3vw,30px);margin-bottom:14px}
+.band{padding-block:clamp(24px,3.5vw,48px);padding-inline:max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px 40px;align-items:end}
+.lead{color:var(--mut);margin:10px 0 0;max-width:60ch}
+.sizes{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.sizes button{font:600 16px Inter,sans-serif;min-height:44px;padding:0 16px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;white-space:nowrap}
+.sizes button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sizes button:focus-visible,input:focus-visible,.ctl button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.custom{display:flex;align-items:center;gap:10px;margin-top:12px;color:var(--mut);font-size:14px;flex-wrap:wrap}
+.custom input{flex:1;min-width:140px;accent-color:var(--acc)}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(9em,1fr));gap:10px}
+.fg{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.fg b{display:block;font:700 clamp(24px,3vw,32px)/1.1 Archivo,sans-serif;white-space:nowrap}
+.fg.main{background:var(--accbg);border-color:transparent}
+.fg.main b{color:var(--acc)}
+.fg span{font-size:13px;color:var(--mut)}
+.model{background:var(--wood)}
+.ctl{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin-bottom:12px;font-size:15px}
+.ctl label{display:flex;align-items:center;gap:8px;min-height:44px}
+.ctl input[type=range]{width:160px;accent-color:var(--acc)}
+.ctl input[type=checkbox]{width:20px;height:20px;accent-color:var(--acc)}
+.ctl button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ctl button{font:500 15px Inter,sans-serif;min-height:44px;padding:0 14px;border-radius:8px;border:1.5px solid color-mix(in srgb,var(--ink) 25%,transparent);background:transparent;color:var(--ink);cursor:pointer}
+#view{height:clamp(320px,52vh,520px);border-radius:12px;overflow:hidden;cursor:grab;position:relative}
+#view canvas{display:block;width:100%;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px;font-size:13px;color:var(--mut)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--mut);font-weight:600}
+td.n,th.n{text-align:right;white-space:nowrap}
+tr.sel td{background:var(--accbg)}
+tr.sel td:first-child{font-weight:600}
+.cmp tbody tr{cursor:pointer}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px}
+.note{font-size:14px;color:var(--mut);margin-top:10px}
+ol.steps{padding-left:1.3em;margin:0;columns:2 340px;column-gap:40px}
+ol.steps li{break-inside:avoid;margin-bottom:12px}
+ul{padding-left:1.2em}
+a{color:var(--acc)}
+.tot td{font-weight:700;border-bottom:0}
+footer{font-size:13px;color:var(--mut)}
+@media(max-width:860px){.top,.two{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){table{font-size:13px}th,td{padding:7px 5px}}
+</style>
+</head>
+<body>
+<header class="band"><div class="wrap top">
+  <div>
+    <h1>Palettenbett aus Baumarktholz</h1>
+    <p class="lead">Ein Bett im Paletten-Look: Querriegel, Längskufen und Deckbretter aus gehobelter Fichte, 200 cm lang. Wähle die Breite – Modell und Preise passen sich an.</p>
+    <div class="sizes" id="sizes" role="group" aria-label="Bettbreite"></div>
+    <div class="custom"><label for="wRange">Eigene Breite</label><input type="range" id="wRange" min="90" max="200" step="10" value="140"><span id="wOut" style="color:var(--ink);font-weight:600;white-space:nowrap">140 cm</span></div>
+  </div>
+  <div class="figs" id="figs"></div>
+</div></header>
+
+<section class="band model"><div class="wrap">
+  <div class="ctl">
+    <label for="exp">Lagen anheben <input type="range" id="exp" min="0" max="40" step="1" value="0"></label>
+    <label><input type="checkbox" id="deck" checked> Deckbretter</label>
+    <button id="reset" type="button">Ansicht zurücksetzen</button>
+  </div>
+  <div class="ctl" id="matSel" role="group" aria-label="Matratze">
+    <span>Matratze</span>
+    <button type="button" data-t="0">Keine</button>
+    <button type="button" data-t="16">Normal 16 cm</button>
+    <button type="button" data-t="24">Mitteldick 24 cm</button>
+    <button type="button" data-t="35">Boxspring-Höhe 35 cm</button>
+    <span id="lieg" style="font-weight:600;white-space:nowrap">Liegehöhe ca. 18 cm</span>
+  </div>
+  <div id="view" aria-label="Drehbares 3D-Modell des Betts"></div>
+  <div class="legend">
+    <span><i style="background:#b98a55"></i>Querriegel 100×60 mm</span>
+    <span><i style="background:#d9b47e"></i>Längskufen 100×60 mm, hochkant</span>
+    <span><i style="background:#eed7ae"></i>Deckbretter 100×18 mm</span>
+    <span>Ziehen zum Drehen, Mausrad zum Zoomen</span>
+  </div>
+</div></section>
+
+<section class="band"><div class="wrap">
+  <h2>Größen im Vergleich</h2>
+  <div class="scroll"><table class="cmp"><thead><tr><th>Bettgröße</th><th class="n">KVH 4 m</th><th class="n">Bretter 2,5 m</th><th class="n">Holz</th><th class="n">Gesamt</th><th class="n">Gewicht</th><th class="n">Brettspannweite</th></tr></thead><tbody id="cmp"></tbody></table></div>
+  <p class="note">120 cm ist am günstigsten: Aus einem 2,5-m-Brett gehen zwei Deckbretter à 119,5 cm, bei 140 und 160 cm nur eins (die Reste eignen sich für ein Kopfteil oder Nachttisch). Höhe immer ca. 18 cm. Preise: hornbach.de, Stand 26.11.2026; Kleinteile geschätzt.</p>
+</div></section>
+
+<section class="band" style="padding-top:0" id="holzliste"><div class="wrap">
+  <h2>Holzliste für den Baumarkt</h2>
+  <p style="margin-top:0;color:var(--mut)">Alles Fichte, gehobelt. Gilt für jeden Baumarkt.</p>
+  <div class="scroll"><table><thead id="buyH"></thead><tbody id="buy"></tbody></table></div>
+  <p class="note">Ersatz: Kantholz 80 × 80 mm statt 100 × 60 mm; Bretter dürfen auch 96 oder 120 mm breit sein.</p>
+</div></section>
+
+
+
+
+<footer class="band" style="padding-top:0"><div class="wrap">
+  Quellen: <a href="https://www.hornbach.de/p/konsta-konstruktionsvollholz-4000-x-100-x-60-mm-fichte-nsi-nicht-sichtbarer-einbau/5958863/">Hornbach KVH 4000×100×60 mm</a> · <a href="https://www.hornbach.de/s/glattkantbrett">Hornbach Glattkantbretter 2500×100×18 mm</a> · Preise können je Markt abweichen.
+</div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+{
+const P={kvh:20.40,board:7.10};
+const SMALL=[["Holzschrauben 6×100 mm (Kufen an Riegel)","50 St.",12],["Holzschrauben 4×40 mm (Deckbretter)","200 St.",12],["Schleifpapier K80 + K120","1 Set",8],["Filzgleiter","8 St.",4]];
+const SMALLSUM=SMALL.reduce((a,b)=>a+b[2],0);
+const SIZES=[120,140,160];
+const eur=v=>v.toLocaleString('de-DE',{style:'currency',currency:'EUR'});
+const num=v=>v.toLocaleString('de-DE',{maximumFractionDigits:1});
+function calc(W){
+  const rPer=Math.floor(400/W),rBars=Math.ceil(4/rPer);
+  const bPer=Math.floor(250/W),boards=Math.ceil(15/bPer);
+  const kvh=2+rBars;
+  const wood=kvh*P.kvh+boards*P.board;
+  const kg=(48000+510*W)*0.00045;
+  const span=(W-24)/3;
+  return {W,rPer,rBars,bPer,boards,kvh,wood,total:wood+SMALLSUM,kg,span};
+}
+let W=140,T=24;
+const $=id=>document.getElementById(id);
+$('sizes').innerHTML=SIZES.map(s=>`<button type="button" data-w="${s}">${s} × 200</button>`).join('');
+$('sizes').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setW(+b.dataset.w)});
+$('wRange').addEventListener('input',e=>setW(+e.target.value));
+$('cmp').addEventListener('click',e=>{const r=e.target.closest('tr');if(r)setW(+r.dataset.w)});
+
+function render(){
+  const c=calc(W);
+  document.querySelectorAll('#sizes button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.w===W));
+  $('wRange').value=W;$('wOut').textContent=W+' cm';
+  $('figs').innerHTML=`<div class="fg main"><span>Material gesamt</span><b>${eur(c.total)}</b></div>
+   <div class="fg"><span>Außenmaß</span><b>${W}×200</b></div>
+   <div class="fg"><span>Höhe ohne Matratze</span><b>ca. 18 cm</b></div>
+   <div class="fg"><span>Gewicht</span><b>ca. ${Math.round(c.kg)} kg</b></div>`;
+  const rows=[...new Set([...SIZES,W])].sort((a,b)=>a-b);
+  $('cmp').innerHTML=rows.map(s=>{const k=calc(s);return `<tr data-w="${s}" class="${s===W?'sel':''}"><td>${s} × 200 cm</td><td class="n">${k.kvh}</td><td class="n">${k.boards}</td><td class="n">${eur(k.wood)}</td><td class="n">${eur(k.total)}</td><td class="n">ca. ${Math.round(k.kg)} kg</td><td class="n">ca. ${Math.round(k.span)} cm</td></tr>`}).join('');
+  build();
+}
+{
+  const hd=SIZES.map(s=>`<th class="n">${s} × 200</th>`).join('');
+  $('buyH').innerHTML=`<tr><th>Holz</th>${hd}</tr>`;
+  $('buy').innerHTML=`<tr><td>Kantholz 100 × 60 mm, 4 m</td>${SIZES.map(s=>`<td class="n">${calc(s).kvh} St.</td>`).join('')}</tr>
+   <tr><td>Brett 100 × 18 mm, 2,5 m</td>${SIZES.map(s=>`<td class="n">${calc(s).boards} St.</td>`).join('')}</tr>`;
+
+
+}
+function setW(w){W=w;try{localStorage.setItem('pbW3',w)}catch(e){}render()}
+
+const el=$('view');let scene,cam,ren,ctl,G,mat,layers={k:[],d:[]};
+const M=window.THREE?{r:new THREE.MeshLambertMaterial({color:0xb98a55}),k:new THREE.MeshLambertMaterial({color:0xd9b47e}),d:new THREE.MeshLambertMaterial({color:0xeed7ae}),e:new THREE.LineBasicMaterial({color:0x6b4f2e,transparent:true,opacity:.35})}:null;
+function home(){cam.position.set(220,220,290);ctl.target.set(0,8,0);ctl.update()}
+function init(){
+  if(!window.THREE){el.innerHTML='<p style="padding:20px">3D-Ansicht konnte nicht geladen werden.</p>';return false}
+  scene=new THREE.Scene();
+  cam=new THREE.PerspectiveCamera(40,el.clientWidth/el.clientHeight,1,4000);
+  ren=new THREE.WebGLRenderer({antialias:true,alpha:true});ren.setPixelRatio(Math.min(2,window.devicePixelRatio));ren.setSize(el.clientWidth,el.clientHeight);el.appendChild(ren.domElement);
+  ctl=new THREE.OrbitControls(cam,ren.domElement);ctl.enableDamping=true;ctl.maxPolarAngle=Math.PI*0.49;
+  scene.add(new THREE.HemisphereLight(0xffffff,0x8a7a66,.75));
+  const dl=new THREE.DirectionalLight(0xffffff,.65);dl.position.set(200,400,250);scene.add(dl);
+  const g=new THREE.GridHelper(500,25,0xb4a88f,0xcfc4ad);g.material.transparent=true;g.material.opacity=.45;scene.add(g);
+  new ResizeObserver(()=>{cam.aspect=el.clientWidth/el.clientHeight;cam.updateProjectionMatrix();ren.setSize(el.clientWidth,el.clientHeight)}).observe(el);
+  home();
+  (function loop(){requestAnimationFrame(loop);ctl.update();ren.render(scene,cam)})();
+  return true;
+}
+function rbox(w,h,d,r,rp,seg){
+  r=Math.max(0.05,Math.min(r,h/2-0.01,w/2-0.1,d/2-0.1));
+  const iw=w-2*r,id=d-2*r,c=Math.max(0.01,Math.min((rp||r)-r,iw/2-0.01,id/2-0.01));
+  const s=new THREE.Shape(),x0=-iw/2,y0=-id/2;
+  s.moveTo(x0+c,y0);s.lineTo(x0+iw-c,y0);s.quadraticCurveTo(x0+iw,y0,x0+iw,y0+c);s.lineTo(x0+iw,y0+id-c);s.quadraticCurveTo(x0+iw,y0+id,x0+iw-c,y0+id);
+  s.lineTo(x0+c,y0+id);s.quadraticCurveTo(x0,y0+id,x0,y0+id-c);s.lineTo(x0,y0+c);s.quadraticCurveTo(x0,y0,x0+c,y0);
+  const geo=new THREE.ExtrudeGeometry(s,{depth:Math.max(0.01,h-2*r),bevelEnabled:true,bevelThickness:r,bevelSize:r,bevelSegments:3,curveSegments:seg||4});
+  geo.rotateX(-Math.PI/2);geo.center();geo.computeVertexNormals();return geo;
+}
+const CH=4;
+function clip(poly,W){
+  const a=W/2,b=100,o=[[-a+CH,-b],[a-CH,-b],[a,-b+CH],[a,b-CH],[a-CH,b],[-a+CH,b],[-a,b-CH],[-a,-b+CH]];
+  let out=poly;
+  for(let i=0;i<o.length;i++){
+    const A=o[i],B=o[(i+1)%o.length],inp=out;out=[];
+    const side=p=>(B[0]-A[0])*(p[1]-A[1])-(B[1]-A[1])*(p[0]-A[0]);
+    for(let j=0;j<inp.length;j++){
+      const P=inp[j],Q=inp[(j+1)%inp.length],sp=side(P),sq=side(Q);
+      if(sp>=0)out.push(P);
+      if((sp>=0)!==(sq>=0)){const t=sp/(sp-sq);out.push([P[0]+t*(Q[0]-P[0]),P[1]+t*(Q[1]-P[1])])}
+    }
+  }
+  return out;
+}
+function box(g,w,h,d,x,y,z,m,list){
+  const pts=clip([[x-w/2,z-d/2],[x+w/2,z-d/2],[x+w/2,z+d/2],[x-w/2,z+d/2]],W);
+  const s=new THREE.Shape(pts.map(p=>new THREE.Vector2(p[0],-p[1])));
+  const geo=new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:false});geo.rotateX(-Math.PI/2);
+  const me=new THREE.Mesh(geo,m),e=new THREE.LineSegments(new THREE.EdgesGeometry(geo,20),M.e);
+  me.position.y=e.position.y=y-h/2;g.add(me,e);if(list)list.push(me,e)}
+let ready=false;
+function build(){
+  if(!ready)ready=init();if(!ready)return;
+  if(G)scene.remove(G);if(mat)scene.remove(mat);layers={k:[],d:[]};
+  G=new THREE.Group();
+  [5,70,130,195].forEach(z=>box(G,W,6,10,0,3,z-100,M.r));
+  for(let i=0;i<4;i++)box(G,6,10,200,-W/2+3+i*(W-6)/3,11,0,M.k,layers.k);
+  for(let i=0;i<15;i++)box(G,W,1.8,10,0,16.9,5+i*190/14-100,M.d,layers.d);
+  layers.k.forEach(o=>o.userData.y=o.position.y);layers.d.forEach(o=>o.userData.y=o.position.y);
+  mat=new THREE.Group();
+  if(T>0){
+    const core=T>30?T-5:T;
+    const m1=new THREE.Mesh(rbox(W-1,core,199,Math.min(5,core/2-0.5),9,8),new THREE.MeshLambertMaterial({color:0xc9dcef}));m1.position.y=core/2;mat.add(m1);
+    if(T>30){const m2=new THREE.Mesh(rbox(W-2,5,198,2.2,4,8),new THREE.MeshLambertMaterial({color:0xf3f1ea}));m2.position.y=core+2.5;mat.add(m2);}
+  }
+  scene.add(G,mat);
+  applyView();
+}
+function applyView(){
+  const s=+$('exp').value;
+  layers.k.forEach(o=>o.position.y=o.userData.y+s);
+  layers.d.forEach(o=>{o.position.y=o.userData.y+s*2;o.visible=$('deck').checked});
+  mat.position.y=17.8+s*3;
+}
+function setT(t){T=t;document.querySelectorAll('#matSel button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.t===T));
+  $('lieg').textContent='Liegehöhe ca. '+Math.round(18+T)+' cm'+(T>30?' (inkl. 5 cm Topper)':'');build()}
+$('matSel').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setT(+b.dataset.t)});
+$('exp').addEventListener('input',()=>G&&applyView());
+$('deck').addEventListener('change',()=>G&&applyView());
+$('reset').addEventListener('click',()=>{if(cam)home();$('exp').value=0;if(G)applyView()});
+try{const s=+localStorage.getItem('pbW3');if(s>=90&&s<=200)W=s}catch(e){}
+render();setT(T);
+}
+</script>
+</body>
+</html>

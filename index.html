@@ -28,6 +28,8 @@ h2{font-size:clamp(24px,3vw,30px);margin-bottom:14px}
 .sizes button{font:600 16px Inter,sans-serif;min-height:44px;padding:0 16px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;white-space:nowrap}
 .sizes button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .sizes button:focus-visible,input:focus-visible,.ctl button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.sizes button small{font-weight:500;opacity:.75;margin-left:4px}
+.hide{display:none!important}
 .custom{display:flex;align-items:center;gap:10px;margin-top:12px;color:var(--mut);font-size:14px;flex-wrap:wrap}
 .custom input{flex:1;min-width:140px;accent-color:var(--acc)}
 .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(9em,1fr));gap:10px}
@@ -71,9 +73,8 @@ footer{font-size:13px;color:var(--mut)}
 <header class="band"><div class="wrap top">
   <div>
     <h1>Palettenbett aus Baumarktholz</h1>
-    <p class="lead">Ein Bett im Paletten-Look: Querriegel, Längskufen und Deckbretter aus gehobelter Fichte, 200 cm lang. Wähle die Breite – Modell und Preise passen sich an.</p>
-    <div class="sizes" id="sizes" role="group" aria-label="Bettbreite"></div>
-    <div class="custom"><label for="wRange">Eigene Breite</label><input type="range" id="wRange" min="90" max="200" step="10" value="140"><span id="wOut" style="color:var(--ink);font-weight:600;white-space:nowrap">140 cm</span></div>
+    <p class="lead">Ein Bett im Paletten-Look: Querriegel, Längskufen und Deckbretter aus gehobelter Fichte, 200 cm lang. Wähle Größe und Bauart – Modell und Preise passen sich an. Teilbare Betten bestehen aus zwei Hälften, die in der Mitte verschraubt sind und sich für den Transport auseinandernehmen lassen.</p>
+    <div class="sizes" id="sizes" role="group" aria-label="Größe und Bauart"></div>
   </div>
   <div class="figs" id="figs"></div>
 </div></header>
@@ -81,6 +82,7 @@ footer{font-size:13px;color:var(--mut)}
 <section class="band model"><div class="wrap">
   <div class="ctl">
     <label for="exp">Lagen anheben <input type="range" id="exp" min="0" max="40" step="1" value="0"></label>
+    <label id="sepWrap" for="sep">Hälften trennen <input type="range" id="sep" min="0" max="60" step="1" value="0"> <span id="sepOut" style="white-space:nowrap">0 cm</span></label>
     <label><input type="checkbox" id="deck" checked> Deckbretter</label>
     <button id="reset" type="button">Ansicht zurücksetzen</button>
   </div>
@@ -97,14 +99,15 @@ footer{font-size:13px;color:var(--mut)}
     <span><i style="background:#b98a55"></i>Querriegel 100×60 mm</span>
     <span><i style="background:#d9b47e"></i>Längskufen 100×60 mm, hochkant</span>
     <span><i style="background:#eed7ae"></i>Deckbretter 100×18 mm</span>
+    <span id="legBolt"><i style="background:#444441"></i>Schlossschrauben M8</span>
     <span>Ziehen zum Drehen, Mausrad zum Zoomen</span>
   </div>
 </div></section>
 
 <section class="band"><div class="wrap">
   <h2>Größen im Vergleich</h2>
-  <div class="scroll"><table class="cmp"><thead><tr><th>Bettgröße</th><th class="n">KVH 4 m</th><th class="n">Bretter 2,5 m</th><th class="n">Holz</th><th class="n">Gesamt</th><th class="n">Gewicht</th><th class="n">Brettspannweite</th></tr></thead><tbody id="cmp"></tbody></table></div>
-  <p class="note">120 cm ist am günstigsten: Aus einem 2,5-m-Brett gehen zwei Deckbretter à 119,5 cm, bei 140 und 160 cm nur eins (die Reste eignen sich für ein Kopfteil oder Nachttisch). Höhe immer ca. 18 cm. Preise: hornbach.de, Stand 26.11.2026; Kleinteile geschätzt.</p>
+  <div class="scroll"><table class="cmp"><thead><tr><th>Bettgröße</th><th>Bauart</th><th class="n">KVH 4 m</th><th class="n">Bretter 2,5 m</th><th class="n">Holz</th><th class="n">Gesamt</th><th class="n">Gewicht</th><th class="n">Brettspannweite</th></tr></thead><tbody id="cmp"></tbody></table></div>
+  <p class="note">Einteilig: 4 Querriegel, 4 Längskufen, 15 Deckbretter über die ganze Breite. Teilbar: zwei Hälften mit je 4 Querriegeln, 3 Längskufen und 15 Deckbrettern, in der Mitte mit 3 Schlossschrauben und Flügelmuttern verbunden. Höhe immer ca. 18 cm. Preise: hornbach.de, Stand 26.11.2026; Kleinteile geschätzt.</p>
 </div></section>
 
 <section class="band" style="padding-top:0" id="holzliste"><div class="wrap">
@@ -113,9 +116,6 @@ footer{font-size:13px;color:var(--mut)}
   <div class="scroll"><table><thead id="buyH"></thead><tbody id="buy"></tbody></table></div>
   <p class="note">Ersatz: Kantholz 80 × 80 mm statt 100 × 60 mm; Bretter dürfen auch 96 oder 120 mm breit sein.</p>
 </div></section>
-
-
-
 
 <footer class="band" style="padding-top:0"><div class="wrap">
   Quellen: <a href="https://www.hornbach.de/p/konsta-konstruktionsvollholz-4000-x-100-x-60-mm-fichte-nsi-nicht-sichtbarer-einbau/5958863/">Hornbach KVH 4000×100×60 mm</a> · <a href="https://www.hornbach.de/s/glattkantbrett">Hornbach Glattkantbretter 2500×100×18 mm</a> · Preise können je Markt abweichen.
@@ -126,52 +126,51 @@ footer{font-size:13px;color:var(--mut)}
 <script>
 {
 const P={kvh:20.40,board:7.10};
-const SMALL=[["Holzschrauben 6×100 mm (Kufen an Riegel)","50 St.",12],["Holzschrauben 4×40 mm (Deckbretter)","200 St.",12],["Schleifpapier K80 + K120","1 Set",8],["Filzgleiter","8 St.",4]];
-const SMALLSUM=SMALL.reduce((a,b)=>a+b[2],0);
-const SIZES=[120,140,160];
+const SMALL=[["Holzschrauben 6×100 mm",12],["Holzschrauben 4×40 mm",12],["Schleifpapier",8],["Filzgleiter",4]];
+const SMALLSUM=SMALL.reduce((a,b)=>a+b[1],0),BOLTS=6;
+const VAR=[{id:'120',w:120,split:false},{id:'140',w:140,split:false},{id:'160',w:160,split:false},{id:'160t',w:160,split:true},{id:'180t',w:180,split:true}];
 const eur=v=>v.toLocaleString('de-DE',{style:'currency',currency:'EUR'});
 const num=v=>v.toLocaleString('de-DE',{maximumFractionDigits:1});
-function calc(W){
-  const rPer=Math.floor(400/W),rBars=Math.ceil(4/rPer);
-  const bPer=Math.floor(250/W),boards=Math.ceil(15/bPer);
-  const kvh=2+rBars;
+const name=v=>`${v.w} × 200${v.split?' teilbar':''}`;
+function calc(v){
+  const W=v.w;
+  if(!v.split){
+    const rPer=Math.floor(400/W),rBars=Math.ceil(4/rPer),bPer=Math.floor(250/W),boards=Math.ceil(15/bPer),kvh=2+rBars;
+    const wood=kvh*P.kvh+boards*P.board;
+    return {kvh,boards,wood,total:wood+SMALLSUM,kg:(48000+510*W)*0.00045,span:(W-24)/3,bolts:0};
+  }
+  const h=W/2,rPer=Math.floor(400/h),rBars=Math.ceil(8/rPer),bPer=Math.floor(250/h),boards=Math.ceil(30/bPer),kvh=3+rBars;
   const wood=kvh*P.kvh+boards*P.board;
-  const kg=(48000+510*W)*0.00045;
-  const span=(W-24)/3;
-  return {W,rPer,rBars,bPer,boards,kvh,wood,total:wood+SMALLSUM,kg,span};
+  return {kvh,boards,wood,total:wood+SMALLSUM+BOLTS,kg:(36000+510*h)*0.00045,span:(h-18)/2,bolts:3};
 }
-let W=140,T=24;
+let V=VAR[1],T=24;
 const $=id=>document.getElementById(id);
-$('sizes').innerHTML=SIZES.map(s=>`<button type="button" data-w="${s}">${s} × 200</button>`).join('');
-$('sizes').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setW(+b.dataset.w)});
-$('wRange').addEventListener('input',e=>setW(+e.target.value));
-$('cmp').addEventListener('click',e=>{const r=e.target.closest('tr');if(r)setW(+r.dataset.w)});
-
+$('sizes').innerHTML=VAR.map(v=>`<button type="button" data-id="${v.id}">${v.w} × 200${v.split?'<small>teilbar</small>':''}</button>`).join('');
+$('sizes').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setV(b.dataset.id)});
+$('cmp').addEventListener('click',e=>{const r=e.target.closest('tr');if(r)setV(r.dataset.id)});
+{
+  $('buyH').innerHTML=`<tr><th>Material</th>${VAR.map(v=>`<th class="n">${name(v)}</th>`).join('')}</tr>`;
+  $('buy').innerHTML=`<tr><td>Kantholz 100 × 60 mm, 4 m</td>${VAR.map(v=>`<td class="n">${calc(v).kvh} St.</td>`).join('')}</tr>
+   <tr><td>Brett 100 × 18 mm, 2,5 m</td>${VAR.map(v=>`<td class="n">${calc(v).boards} St.</td>`).join('')}</tr>
+   <tr><td>Schlossschraube M8 × 140 mm mit Scheibe und Flügelmutter</td>${VAR.map(v=>`<td class="n">${v.split?'3 St.':'–'}</td>`).join('')}</tr>`;
+}
 function render(){
-  const c=calc(W);
-  document.querySelectorAll('#sizes button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.w===W));
-  $('wRange').value=W;$('wOut').textContent=W+' cm';
+  const c=calc(V);
+  document.querySelectorAll('#sizes button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===V.id));
   $('figs').innerHTML=`<div class="fg main"><span>Material gesamt</span><b>${eur(c.total)}</b></div>
-   <div class="fg"><span>Außenmaß</span><b>${W}×200</b></div>
-   <div class="fg"><span>Höhe ohne Matratze</span><b>ca. 18 cm</b></div>
-   <div class="fg"><span>Gewicht</span><b>ca. ${Math.round(c.kg)} kg</b></div>`;
-  const rows=[...new Set([...SIZES,W])].sort((a,b)=>a-b);
-  $('cmp').innerHTML=rows.map(s=>{const k=calc(s);return `<tr data-w="${s}" class="${s===W?'sel':''}"><td>${s} × 200 cm</td><td class="n">${k.kvh}</td><td class="n">${k.boards}</td><td class="n">${eur(k.wood)}</td><td class="n">${eur(k.total)}</td><td class="n">ca. ${Math.round(k.kg)} kg</td><td class="n">ca. ${Math.round(k.span)} cm</td></tr>`}).join('');
+   <div class="fg"><span>Außenmaß</span><b>${V.w}×200</b></div>
+   <div class="fg"><span>Bauart</span><b>${V.split?'2 Hälften':'1 Teil'}</b></div>
+   <div class="fg"><span>${V.split?'Gewicht je Hälfte':'Gewicht'}</span><b>ca. ${Math.round(c.kg)} kg</b></div>`;
+  $('cmp').innerHTML=VAR.map(v=>{const k=calc(v);return `<tr data-id="${v.id}" class="${v.id===V.id?'sel':''}"><td>${v.w} × 200 cm</td><td>${v.split?'teilbar (2 × '+v.w/2+' cm)':'einteilig'}</td><td class="n">${k.kvh}</td><td class="n">${k.boards}</td><td class="n">${eur(k.wood)}</td><td class="n">${eur(k.total)}</td><td class="n">ca. ${Math.round(v.split?k.kg*2:k.kg)} kg</td><td class="n">ca. ${Math.round(k.span)} cm</td></tr>`}).join('');
+  $('sepWrap').classList.toggle('hide',!V.split);$('legBolt').classList.toggle('hide',!V.split);
+  if(!V.split)$('sep').value=0;
   build();
 }
-{
-  const hd=SIZES.map(s=>`<th class="n">${s} × 200</th>`).join('');
-  $('buyH').innerHTML=`<tr><th>Holz</th>${hd}</tr>`;
-  $('buy').innerHTML=`<tr><td>Kantholz 100 × 60 mm, 4 m</td>${SIZES.map(s=>`<td class="n">${calc(s).kvh} St.</td>`).join('')}</tr>
-   <tr><td>Brett 100 × 18 mm, 2,5 m</td>${SIZES.map(s=>`<td class="n">${calc(s).boards} St.</td>`).join('')}</tr>`;
+function setV(id){V=VAR.find(v=>v.id===id)||V;try{localStorage.setItem('pbV',V.id)}catch(e){}render()}
 
-
-}
-function setW(w){W=w;try{localStorage.setItem('pbW3',w)}catch(e){}render()}
-
-const el=$('view');let scene,cam,ren,ctl,G,mat,layers={k:[],d:[]};
-const M=window.THREE?{r:new THREE.MeshLambertMaterial({color:0xb98a55}),k:new THREE.MeshLambertMaterial({color:0xd9b47e}),d:new THREE.MeshLambertMaterial({color:0xeed7ae}),e:new THREE.LineBasicMaterial({color:0x6b4f2e,transparent:true,opacity:.35})}:null;
-function home(){cam.position.set(220,220,290);ctl.target.set(0,8,0);ctl.update()}
+const el=$('view');let scene,cam,ren,ctl,A,B,bolts,mat,layers={k:[],d:[]};
+const M=window.THREE?{r:new THREE.MeshLambertMaterial({color:0xb98a55}),k:new THREE.MeshLambertMaterial({color:0xd9b47e}),d:new THREE.MeshLambertMaterial({color:0xeed7ae}),b:new THREE.MeshLambertMaterial({color:0x444441}),e:new THREE.LineBasicMaterial({color:0x6b4f2e,transparent:true,opacity:.35})}:null;
+function home(){cam.position.set(230,220,300);ctl.target.set(0,8,0);ctl.update()}
 function init(){
   if(!window.THREE){el.innerHTML='<p style="padding:20px">3D-Ansicht konnte nicht geladen werden.</p>';return false}
   scene=new THREE.Scene();
@@ -211,19 +210,30 @@ function clip(poly,W){
   return out;
 }
 function box(g,w,h,d,x,y,z,m,list){
-  const pts=clip([[x-w/2,z-d/2],[x+w/2,z-d/2],[x+w/2,z+d/2],[x-w/2,z+d/2]],W);
+  const pts=clip([[x-w/2,z-d/2],[x+w/2,z-d/2],[x+w/2,z+d/2],[x-w/2,z+d/2]],V.w);
   const s=new THREE.Shape(pts.map(p=>new THREE.Vector2(p[0],-p[1])));
   const geo=new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:false});geo.rotateX(-Math.PI/2);
   const me=new THREE.Mesh(geo,m),e=new THREE.LineSegments(new THREE.EdgesGeometry(geo,20),M.e);
   me.position.y=e.position.y=y-h/2;g.add(me,e);if(list)list.push(me,e)}
+function frame(x0,w,nk){
+  const g=new THREE.Group();
+  [5,70,130,195].forEach(z=>box(g,w,6,10,x0+w/2,3,z-100,M.r));
+  for(let i=0;i<nk;i++)box(g,6,10,200,x0+3+i*(w-6)/(nk-1),11,0,M.k,layers.k);
+  for(let i=0;i<15;i++)box(g,w,1.8,10,x0+w/2,16.9,5+i*190/14-100,M.d,layers.d);
+  return g;
+}
 let ready=false;
 function build(){
   if(!ready)ready=init();if(!ready)return;
-  if(G)scene.remove(G);if(mat)scene.remove(mat);layers={k:[],d:[]};
-  G=new THREE.Group();
-  [5,70,130,195].forEach(z=>box(G,W,6,10,0,3,z-100,M.r));
-  for(let i=0;i<4;i++)box(G,6,10,200,-W/2+3+i*(W-6)/3,11,0,M.k,layers.k);
-  for(let i=0;i<15;i++)box(G,W,1.8,10,0,16.9,5+i*190/14-100,M.d,layers.d);
+  [A,B,bolts,mat].forEach(o=>o&&scene.remove(o));A=B=bolts=null;layers={k:[],d:[]};
+  const W=V.w;
+  if(V.split){
+    A=frame(-W/2,W/2,3);B=frame(0,W/2,3);
+    bolts=new THREE.Group();
+    [30,100,170].forEach(z=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(.8,.8,16,12),M.b);c.rotation.z=Math.PI/2;c.position.set(0,11,z-100);bolts.add(c);
+      [-7.5,7.5].forEach(x=>{const k=new THREE.Mesh(new THREE.CylinderGeometry(1.8,1.8,1,16),M.b);k.rotation.z=Math.PI/2;k.position.set(x,11,z-100);bolts.add(k)})});
+    scene.add(A,B,bolts);
+  }else{A=frame(-W/2,W,4);scene.add(A)}
   layers.k.forEach(o=>o.userData.y=o.position.y);layers.d.forEach(o=>o.userData.y=o.position.y);
   mat=new THREE.Group();
   if(T>0){
@@ -231,22 +241,24 @@ function build(){
     const m1=new THREE.Mesh(rbox(W-1,core,199,Math.min(5,core/2-0.5),9,8),new THREE.MeshLambertMaterial({color:0xc9dcef}));m1.position.y=core/2;mat.add(m1);
     if(T>30){const m2=new THREE.Mesh(rbox(W-2,5,198,2.2,4,8),new THREE.MeshLambertMaterial({color:0xf3f1ea}));m2.position.y=core+2.5;mat.add(m2);}
   }
-  scene.add(G,mat);
+  scene.add(mat);
   applyView();
 }
 function applyView(){
-  const s=+$('exp').value;
+  const s=+$('exp').value,sp=V.split?+$('sep').value:0;
+  $('sepOut').textContent=Math.round(sp)+' cm';
   layers.k.forEach(o=>o.position.y=o.userData.y+s);
   layers.d.forEach(o=>{o.position.y=o.userData.y+s*2;o.visible=$('deck').checked});
-  mat.position.y=17.8+s*3;
+  if(V.split){A.position.x=-sp/2;B.position.x=sp/2;bolts.visible=sp<1;bolts.position.y=s}
+  mat.position.y=17.8+s*3;mat.visible=sp<1;
 }
 function setT(t){T=t;document.querySelectorAll('#matSel button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.t===T));
   $('lieg').textContent='Liegehöhe ca. '+Math.round(18+T)+' cm'+(T>30?' (inkl. 5 cm Topper)':'');build()}
 $('matSel').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setT(+b.dataset.t)});
-$('exp').addEventListener('input',()=>G&&applyView());
-$('deck').addEventListener('change',()=>G&&applyView());
-$('reset').addEventListener('click',()=>{if(cam)home();$('exp').value=0;if(G)applyView()});
-try{const s=+localStorage.getItem('pbW3');if(s>=90&&s<=200)W=s}catch(e){}
+['exp','sep'].forEach(id=>$(id).addEventListener('input',()=>A&&applyView()));
+$('deck').addEventListener('change',()=>A&&applyView());
+$('reset').addEventListener('click',()=>{if(cam)home();$('exp').value=0;$('sep').value=0;if(A)applyView()});
+try{const s=localStorage.getItem('pbV');if(VAR.some(v=>v.id===s))V=VAR.find(v=>v.id===s)}catch(e){}
 render();setT(T);
 }
 </script>
